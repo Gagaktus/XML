@@ -1,128 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<notebook xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="notebook_schema.xsd">
-    
-    <offices>
-        <office code="001">Дресс-роуз офис</office>
-        <office code="002">Сабаоди офис</office>
-        <office code="003">Ватер-7 офис</office>
-        <office code="004">Маринфорд офис</office>
-        <office code="005">Панк-Хазард офис</office>
-    </offices>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="text" encoding="UTF-8"/>
 
-    <person id="id_001" office="001">
-        <name>
-            <first>Монки</first>
-            <surname>Д-Луффи</surname>
-        </name>
-        <address>
-            <city>Москва</city>
-            <street>ул. Пушкинская к15</street>
-            <index>148800</index>
-        </address>
-        <phones>
-            <phone type="work">969-65-65</phone>
-            <phone type="home">969-65-62</phone>
-            <phone>962-62-62</phone>
-        </phones>
-    </person>
+<xsl:template match="/">
+    <xsl:text>Комплекс Курская: всего занятий </xsl:text>
+    <xsl:value-of select="count(/timeTable/lessons/lesson[@complex='КУ'])"/>
+    <xsl:text>&#10;</xsl:text>
 
-    <person id="id_102" office="002">
-        <name>
-            <first>Драгон</first>
-            <surname>Д-Эйс</surname>
-        </name>
-        <address>
-            <street>ул. Украинская 18</street>
-            <index>014880</index>
-            <city>Санкт-Петербург</city>
-        </address>
-        <phones>
-            <phone type="work">969-65-22</phone>
-            <phone type="home">969-65-11</phone>
-        </phones>
-    </person>
+    <xsl:text>Комплекс ВДНХ: всего занятий </xsl:text>
+    <xsl:value-of select="count(/timeTable/lessons/lesson[@complex='ВТ'])"/>
+    <xsl:text>&#10;</xsl:text>
 
-    <person id="id_103" office="003">
-        <name>
-            <first>Голова</first>
-            <surname>Трава</surname>
-        </name>
-        <address>
-            <city>Япония</city>
-            <index>001488</index>
-            <street>ул. Кавай 25</street>
-        </address>
-        <phones>
-            <phone type="work">969-35-65</phone>
-            <phone>362-65-65</phone>
-            <phone type="home">929-65-65</phone>
-        </phones>
-    </person>
+    <xsl:text>Занятий в 10:00 </xsl:text>
+    <xsl:value-of select="count(/timeTable/lessons/lesson[time='10:00'])"/>
+    <xsl:text>&#10;</xsl:text>
 
-    <person id="id_104" office="004">
-        <name>
-            <first>Нами</first>
-            <surname>Крысова</surname>
-        </name>
-        <address>
-            <index>696969</index>
-            <city>Биробиджан</city>
-            <street>Евреевская, 30</street>
-        </address>
-        <phones>
-            <phone type="work">969-65-65</phone>
-        </phones>
-    </person>
+    <xsl:text>Занятий в 15:30 </xsl:text>
+    <xsl:value-of select="count(/timeTable/lessons/lesson[time='15:30'])"/>
+    <xsl:text>&#10;</xsl:text>
 
-    <person id="id_105" office="005">
-        <name>
-            <first>Златовласка</first>
-            <surname>Ассиметробровая</surname>
-        </name>
-        <address>
-            <street>Светланская улица, 50</street>
-            <city>Кыргызстан</city>
-            <index>691488</index>
-        </address>
-        <phones>
-            <phone type="home">969-65-65</phone>
-            <phone>969-67-65</phone>
-            <phone type="work">969-43-65</phone>
-            <phone>969-65-10</phone>
-        </phones>
-    </person>
+    <xsl:text>Занятий в 17:20 </xsl:text>
+    <xsl:value-of select="count(/timeTable/lessons/lesson[time='17:20'])"/>
+    <xsl:text>&#10;</xsl:text>
 
-    <person id="id_106" office="001">
-        <name>
-            <first>Олень</first>
-            <surname>Медик</surname>
-        </name>
-        <address>
-            <city>Остров сакуры</city>
-            <index>691469</index>
-            <street>Гетто проспект, 27</street>
-        </address>
-        <phones>
-            <phone type="home">329-65-65</phone>
-        </phones>
-    </person>
+    <xsl:text>Первое занятие: </xsl:text>
+    <xsl:value-of select="/timeTable/lessons/lesson[1]/thema"/>
+    <xsl:text> состоялось </xsl:text>
+    <xsl:value-of select="/timeTable/lessons/lesson[1]/date"/>
+    <xsl:text>&#10;</xsl:text>
 
-    <person id="id_107" office="002">
-        <name>
-            <first>Май</first>
-            <surname>Сакураджима!</surname>
-        </name>
-        <address>
-            <city>Камакура</city>
-            <street>хийа 60</street>
-            <index>110611</index>
-        </address>
-        <phones>
-            <phone type="work">969-35-65</phone>
-            <phone type="home">969-65-17</phone>
-            <phone>969-35-65</phone>
-        </phones>
-    </person>
+    <xsl:text>Последнее занятие: </xsl:text>
+    <xsl:value-of select="/timeTable/lessons/lesson[last()]/thema"/>
+    <xsl:text> состоялось </xsl:text>
+    <xsl:value-of select="/timeTable/lessons/lesson[last()]/date"/>
+    <xsl:text>&#10;</xsl:text>
 
-</notebook>
+    <xsl:text>Занятий по DTD </xsl:text>
+    <xsl:value-of select="count(/timeTable/lessons/lesson[contains(thema, 'DTD')])"/>
+    <xsl:text>&#10;</xsl:text>
+
+    <xsl:text>Чётных занятий на Курской </xsl:text>
+    <xsl:value-of select="count(/timeTable/lessons/lesson[@complex='КУ'][number(@no) mod 2 = 0])"/>
+    <xsl:text>&#10;</xsl:text>
+
+    <xsl:text>Нечётных занятий на ВДНХ </xsl:text>
+    <xsl:value-of select="count(/timeTable/lessons/lesson[@complex='ВТ'][number(@no) mod 2 = 1])"/>
+    <xsl:text>&#10;</xsl:text>
+</xsl:template>
+
+</xsl:stylesheet>
