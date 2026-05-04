@@ -1,85 +1,47 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:output method="html" indent="no" encoding="utf-8" omit-xml-declaration="yes"/>
 
-    <xs:element name="notebook">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="offices" type="officesType"/>
-                <xs:element name="person" type="personType" maxOccurs="unbounded"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
+  <xsl:key name="city-group" match="item" use="@city"/>
 
-    <xs:complexType name="officesType">
-        <xs:sequence>
-            <xs:element name="office" type="officeType" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
+  <xsl:key name="org-group" match="item" use="concat(@city, '|', @org)"/>
 
-    <xs:complexType name="officeType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="code" type="xs:string" use="required"/>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
-    <xs:complexType name="personType">
-        <xs:sequence>
-            <xs:element name="name" type="nameType"/>
-            <xs:element name="address" type="addressType"/>
-            <xs:element name="phones" type="phonesType"/>
-        </xs:sequence>
-        <xs:attribute name="id" type="xs:string" use="required"/>
-        <xs:attribute name="office" type="xs:string" use="required"/>
-    </xs:complexType>
-
-    <xs:complexType name="nameType">
-        <xs:sequence>
-            <xs:element name="first" type="xs:string"/>
-            <xs:element name="surname" type="xs:string"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="addressType">
-        <xs:all>
-            <xs:element name="city" type="xs:string"/>
-            <xs:element name="street" type="xs:string"/>
-            <xs:element name="index">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:pattern value="\d{6}"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-        </xs:all>
-    </xs:complexType>
-
-    <xs:complexType name="phonesType">
-        <xs:sequence>
-            <xs:element name="phone" type="phoneType" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="phoneType">
-        <xs:simpleContent>
-            <xs:extension base="phoneNumberType">
-                <xs:attribute name="type" use="optional">
-                    <xs:simpleType>
-                        <xs:restriction base="xs:string">
-                            <xs:enumeration value="work"/>
-                            <xs:enumeration value="home"/>
-                        </xs:restriction>
-                    </xs:simpleType>
-                </xs:attribute>
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
-    <xs:simpleType name="phoneNumberType">
-        <xs:restriction base="xs:string">
-            <xs:pattern value="\d{3}-\d{2}-\d{2}"/>
-        </xs:restriction>
-    </xs:simpleType>
-
-</xs:schema>
+  <xsl:template match="/">
+    <html>
+      <head>
+        <title>Города</title>
+      </head>
+      <body>
+        <h1>Города и компании</h1>
+        <ul>
+          <xsl:for-each select="//item[generate-id() = generate-id(key('city-group', @city)[1])]">
+            <li>
+              <h3>
+                <xsl:value-of select="@city"/>
+              </h3>
+              <p>Всего товаров: <xsl:value-of select="count(key('city-group', @city))"/></p>
+              <xsl:for-each select="key('city-group', @city)
+                [generate-id() = generate-id(key('org-group', concat(@city, '|', @org))[1])]">
+                <ul>
+                  <li>
+                    <h4>
+                      <xsl:value-of select="@org"/>
+                    </h4>
+                    <p>Всего товаров: <xsl:value-of select="count(key('org-group', concat(@city, '|', @org)))"/></p>
+                    <ul>
+                      <xsl:for-each select="key('org-group', concat(@city, '|', @org))">
+                        <li>
+                          <xsl:value-of select="@title"/>
+                        </li>
+                      </xsl:for-each>
+                    </ul>
+                  </li>
+                </ul>
+              </xsl:for-each>
+            </li>
+          </xsl:for-each>
+        </ul>
+      </body>
+    </html>
+  </xsl:template>
+</xsl:stylesheet>
