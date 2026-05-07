@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="text" encoding="UTF-8"/>
-
   <xsl:template match="/sum-of-sequence">
     <xsl:variable name="a" select="number(from)"/>
     <xsl:variable name="b" select="number(to)"/>
@@ -21,5 +20,4 @@
     <xsl:variable name="sum" select="$count * ($first + $last) div 2"/>
     <xsl:value-of select="$sum"/>
   </xsl:template>
-
 </xsl:stylesheet>
