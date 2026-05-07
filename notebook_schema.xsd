@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="text" encoding="UTF-8"/>
+
   <xsl:template match="/sum-of-sequence">
     <xsl:variable name="a" select="number(from)"/>
     <xsl:variable name="b" select="number(to)"/>
-    <xsl:variable name="first">
+    
+    <xsl:variable name="start">
       <xsl:choose>
         <xsl:when test="$a &lt;= $b"><xsl:value-of select="$a"/></xsl:when>
         <xsl:otherwise><xsl:value-of select="$b"/></xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="last">
+    <xsl:variable name="end">
       <xsl:choose>
         <xsl:when test="$a &lt;= $b"><xsl:value-of select="$b"/></xsl:when>
         <xsl:otherwise><xsl:value-of select="$a"/></xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="count" select="$last - $first + 1"/>
-    <xsl:variable name="sum" select="$count * ($first + $last) div 2"/>
-    <xsl:value-of select="$sum"/>
+    
+    <xsl:call-template name="sum-range">
+      <xsl:with-param name="current" select="$start"/>
+      <xsl:with-param name="end" select="$end"/>
+      <xsl:with-param name="accum" select="0"/>
+    </xsl:call-template>
   </xsl:template>
+
+  <xsl:template name="sum-range">
+    <xsl:param name="current"/>
+    <xsl:param name="end"/>
+    <xsl:param name="accum"/>
+    
+    <xsl:choose>
+      <xsl:when test="$current > $end">
+        <xsl:value-of select="$accum"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="sum-range">
+          <xsl:with-param name="current" select="$current + 1"/>
+          <xsl:with-param name="end" select="$end"/>
+          <xsl:with-param name="accum" select="$accum + $current"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 </xsl:stylesheet>
