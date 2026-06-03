@@ -8,22 +8,38 @@
     
     <xsl:variable name="start">
       <xsl:choose>
-        <xsl:when test="$a &lt;= $b"><xsl:value-of select="$a"/></xsl:when>
-        <xsl:otherwise><xsl:value-of select="$b"/></xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <xsl:variable name="end">
-      <xsl:choose>
-        <xsl:when test="$a &lt;= $b"><xsl:value-of select="$b"/></xsl:when>
-        <xsl:otherwise><xsl:value-of select="$a"/></xsl:otherwise>
+        <xsl:when test="$a &lt;= $b">
+          <xsl:value-of select="$a"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$b"/>
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
     
-    <xsl:call-template name="sum-range">
-      <xsl:with-param name="current" select="$start"/>
-      <xsl:with-param name="end" select="$end"/>
-      <xsl:with-param name="accum" select="0"/>
-    </xsl:call-template>
+    <xsl:variable name="end">
+      <xsl:choose>
+        <xsl:when test="$a &lt;= $b">
+          <xsl:value-of select="$b"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$a"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <xsl:choose>
+      <xsl:when test="string(number(from))='NaN' or string(number(to))='NaN'">
+        <xsl:text>0</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="sum-range">
+          <xsl:with-param name="current" select="$start"/>
+          <xsl:with-param name="end" select="$end"/>
+          <xsl:with-param name="accum" select="0"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="sum-range">
